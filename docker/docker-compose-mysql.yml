@@ -1,6 +1,7 @@
 version: 3
 services:
   mysql:
+    restart: always
     image: mysql:5.7
     container_name: triple_db
     ports:
@@ -11,7 +12,7 @@ services:
     command:
       - --character-set-server=utf8mb3
       - --collation-server=utf8_general_ci
-      - --init-file /data/application/init.sql
+      - --init-file /data/application/prepared.sql
     volumes:
       - ../docker:/var/lib/mysql
-      - ./prepared.sql:/data/application/init.sql
+      - ./prepared.sql:/data/application/prepared.sql

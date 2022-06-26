@@ -1,19 +1,28 @@
 package io.taech.triple.business.events.entity;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TravelersReview {
 
     @Id
-    @Column(nullable = false, columnDefinition = "BINARY(16)")
+    @Column(nullable = false, length = 36)
     private UUID id;
+
+    @Column(nullable = false, length = 36)
+    private UUID userId;
+
+    @Column(nullable = false, length = 36)
+    private UUID placeId;
 
     @Column(nullable = false)
     private String reviewContent;
@@ -23,17 +32,5 @@ public class TravelersReview {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createTime;
-
-    public static TravelersReview create(final String reviewContent) {
-        final TravelersReview review = new TravelersReview();
-        review.reviewContent = reviewContent;
-        review.deleteYn = "N";
-        review.createTime = LocalDateTime.now();
-
-        return review;
-    }
-
-
-
 
 }

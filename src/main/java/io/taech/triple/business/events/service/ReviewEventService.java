@@ -3,7 +3,6 @@ package io.taech.triple.business.events.service;
 import io.taech.triple.business.events.constant.ActionType;
 import io.taech.triple.business.events.constant.EventType;
 import io.taech.triple.business.events.dto.request.EventDto;
-import io.taech.triple.business.events.entity.ReviewImages;
 import io.taech.triple.business.events.entity.TravelersReview;
 import io.taech.triple.business.events.repository.TravelersReviewRepository;
 import io.taech.triple.common.excpeted.EventProcessingException;
@@ -56,10 +55,11 @@ public class ReviewEventService {
     private TravelersReview getReviewWithInspectEvent(final EventDto eventDto) throws Exception {
 
         final UUID reviewId = ValidUtils.getWithInspect(eventDto.getReviewId());
-        final TravelersReview review = travelersReviewRepository.findByReviewId(reviewId);
+        final UUID userId = ValidUtils.getWithInspect(eventDto.getUserId());
+        final TravelersReview review = travelersReviewRepository.findReview(reviewId, userId);
 
         if (Utils.isNull(review)) {
-            log.error("There is no review data that which has id \"{}\".", reviewId);
+            log.error("There is no review data that which has id \"{}\" with user id \"{}\".", reviewId, userId);
             throw new EventProcessingException(ResponseStatus.NOT_FOUND_REVIEW_DATA);
         }
 
@@ -70,6 +70,7 @@ public class ReviewEventService {
 
     private void addReviewEventProcess(final EventDto eventDto, final TravelersReview review) throws Exception {
 
-
+        final UUID placeId = review.getPlaceId();
+        log.info("place id is \"{}\"", placeId);
     }
 }
