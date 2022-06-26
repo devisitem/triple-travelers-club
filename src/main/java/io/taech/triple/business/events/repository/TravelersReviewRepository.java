@@ -7,22 +7,28 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
+
+import static io.taech.triple.business.events.entity.QTravelersReview.travelersReview;
 
 
 @Repository
 public class TravelersReviewRepository extends QuerydslRepositorySupport {
 
-    private final JPAQueryFactory qeury;
-    p
+    private final JPAQueryFactory query;
 
 
-    public TravelersReviewRepository(final JPAQueryFactory qeury) {
+    public TravelersReviewRepository(final JPAQueryFactory query) {
         super(TravelersReview.class);
-        this.qeury = qeury;
+        this.query = query;
     }
 
-    public List<TravelersReview> findByReviewId(final String reviewId) {
+    public TravelersReview findByReviewId(final UUID reviewId) {
 
-        return null;
+        return query.selectFrom(travelersReview)
+                .where(travelersReview.id.eq(reviewId))
+                .orderBy(travelersReview.createTime.desc())
+                .limit(1L)
+                .fetchOne();
     }
 }

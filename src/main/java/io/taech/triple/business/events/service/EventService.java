@@ -19,7 +19,7 @@ public class EventService {
 
     private final ReviewEventService reviewEventService;
 
-    public StandardResponse consumeEvent(final EventDto eventDto) throws EventProcessingException {
+    public StandardResponse consumeEvent(final EventDto eventDto) throws Exception {
         final String typeName = eventDto.getType();
         final EventType foundType = EventType.find(typeName);
 

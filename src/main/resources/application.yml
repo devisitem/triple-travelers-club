@@ -4,7 +4,7 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
@@ -14,6 +14,6 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     userName: root
     password: 1111
-    url: jdbc:mysql://localhost:3894/triple
+    url: jdbc:mysql://localhost:3302/triple_db
 
-
+#

@@ -10,4 +10,9 @@ public class EventProcessingException extends RuntimeException {
     public EventProcessingException(final ResponseStatus responseStatus) {
         this.responseStatus = responseStatus;
     }
+
+    @Override
+    public String getMessage() {
+        return this.responseStatus.getMessage();
+    }
 }

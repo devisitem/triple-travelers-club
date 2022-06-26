@@ -20,7 +20,7 @@ public class EventController {
     private final EventService service;
 
     @PostMapping
-    public ResponseEntity<StandardResponse> handleEvent(@RequestBody @Valid final EventDto eventDto) {
+    public ResponseEntity<StandardResponse> handleEvent(@RequestBody @Valid final EventDto eventDto) throws Exception {
 
         final StandardResponse response = service.consumeEvent(eventDto);
 
