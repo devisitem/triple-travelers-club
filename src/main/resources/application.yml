@@ -16,4 +16,6 @@ spring:
     password: 1111
     url: jdbc:mysql://localhost:3302/triple_db
 
+# docker run -it -d -p 3302:3306 --name triple-travelers-club --platform=linux/amd64 -e MYSQL_ROOT_PASSWORD=1111 mysql:5.7
+# docker exec -it triple-travelers-club bash
 #

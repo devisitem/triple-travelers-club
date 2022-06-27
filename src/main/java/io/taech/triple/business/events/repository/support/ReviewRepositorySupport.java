@@ -1,4 +1,4 @@
-package io.taech.triple.business.events.repository;
+package io.taech.triple.business.events.repository.support;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,15 +11,16 @@ import java.util.UUID;
 
 
 @Repository
-public class TravelersReviewRepository extends QuerydslRepositorySupport {
+public class ReviewRepositorySupport extends QuerydslRepositorySupport {
 
     private final JPAQueryFactory query;
 
 
-    public TravelersReviewRepository(final JPAQueryFactory query) {
+    public ReviewRepositorySupport(final JPAQueryFactory query) {
         super(TravelersReview.class);
         this.query = query;
     }
+
 
     public TravelersReview findReview(final UUID reviewId, final UUID userId) {
         final QTravelersReview review = QTravelersReview.travelersReview;

@@ -1,15 +1,18 @@
 package io.taech.triple.business.events.service;
 
+
 import io.taech.triple.business.events.dto.request.EventDto;
+import io.taech.triple.business.events.repository.support.ReviewRepositorySupport;
 import io.taech.triple.common.base.MockingTester;
 import io.taech.triple.common.excpeted.EventProcessingException;
 import io.taech.triple.common.excpeted.ResponseStatus;
-import io.taech.triple.common.excpeted.ValidateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 
 class ReviewEventServiceTest extends MockingTester {
@@ -17,47 +20,26 @@ class ReviewEventServiceTest extends MockingTester {
     @InjectMocks
     private ReviewEventService service;
 
+    @Mock
+    private ReviewRepositorySupport repository;
+
     @Test
-    @DisplayName("[리뷰 이벤트 처리] 존재하지않는 액션 타입")
-    public void consumeReviewEvent1() throws Throwable {
+    @DisplayName("[리뷰 작성 이벤트 처리] 존재하지 않는 리뷰")
+    public void getReviewAboutEvent1() throws Throwable {
         /* Given */
-        final String action = "EDIT";
+        final String reviewId = "1bbff29d-69db-404e-b6fb-396de18ebb85";
+        final String userId = "7c4f1e5f-22f1-4028-a2e7-5395391b22c5";
         final EventDto input = new EventDto();
-        input.setAction(action);
+        input.setReviewId(reviewId);
+        input.setUserId(userId);
 
         /* When */
-        final EventProcessingException actual = assertThrows(EventProcessingException.class, () -> service.consumeReviewEvent(input));
+        when(repository.findReview(input.getReviewId(), input.getUserId()))
+                .thenReturn(null);
+        final EventProcessingException actual = assertThrows(EventProcessingException.class, () -> service.proceedAddEvent(input));
 
         /* Then */
-        assertEquals(ResponseStatus.INVALID_EVENT, actual.getResponseStatus());
-
-    }
-
-    @Test
-    @DisplayName("[리뷰 이벤트 처리] 올바르지 않는 UUID 형식 (리뷰 아이디 검증)")
-    public void consumeReviewEvent2() throws Throwable {
-        /* Given */
-        final EventDto input = new EventDto();
-        input.setType("REVIEW");
-        input.setAction("ADD");
-        input.setReviewId("240a06582dc5f-4878-9381-ebb7b2667772");
-
-        /* When */
-        final ValidateException actual = assertThrows(ValidateException.class, () -> service.consumeReviewEvent(input));
-
-        /* Then */
-        assertNotNull(actual);
-
-    }
-
-    @Test
-    @DisplayName("[리뷰 이벤트 처리]")
-    public void consumeReviewEvent3() throws Throwable {
-        /* Given */
-
-        /* When */
-
-        /* Then */
+        assertEquals(ResponseStatus.NOT_FOUND_REVIEW_DATA, actual.getResponseStatus());
 
     }
 }

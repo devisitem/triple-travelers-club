@@ -1,35 +1,32 @@
 package io.taech.triple.business.events.constant;
 
-import io.taech.triple.common.util.Utils;
+import io.taech.triple.business.events.service.ReviewEventService;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public enum EventType {
-    REVIEW(ActionType.ADD, ActionType.MOD, ActionType.DELETE)
+public enum EventStrategy {
+    REVIEW(ReviewEventService.BEAN_NAME)
     //== Some other events ==//
     ;
 
-    private ActionType [] actionTypes;
+    private String beanName;
 
-    EventType (final ActionType... actionTypes) {
-        this.actionTypes = actionTypes;
+    EventStrategy(final String beanName) {
+        this.beanName = beanName;
     }
 
-    private static final Map<String, EventType> typeMap = Arrays.stream(values()).collect(Collectors.toMap(Enum::name, Function.identity()));
+    private static final Map<String, EventStrategy> serviceTicket = Arrays.stream(values())
+            .collect(Collectors.toMap(Enum::name, Function.identity()));
 
-    public static EventType find(final String typeName) {
+    public static EventStrategy find(final String type) {
 
-        return typeMap.get(typeName);
+        return serviceTicket.get(type);
     }
 
-    public Optional<ActionType> getAction(final String actionType) {
-
-        return Arrays.stream(this.actionTypes)
-                .filter(at -> at.name().equals(actionType))
-                .findFirst();
+    public String getBeanName() {
+        return this.beanName;
     }
 }
