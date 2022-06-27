@@ -74,7 +74,8 @@ create table travelers_mileage_history
     id          varchar(36)                        not null comment '마일리지 이력 아이디'
         primary key,
     user_id     varchar(36)                        not null comment '유저 아이디',
-    type        int(1)                             not null comment '마일리지 이력 타입. 1: 적립, 2: 사용',
+    type        int(1)                             not null comment '마일리지 이력 타입. 1: 적립, 2: 소모',
+    mileage     int                                not null comment '적립 또는 소모 마일리지',
     description varchar(200)                       not null comment '적립 또는 사용내용',
     create_time datetime default CURRENT_TIMESTAMP not null comment '생성 일시'
 )
@@ -87,10 +88,11 @@ create index travelers_mileage_history_user_for_search
 
 create table travelers_mileage_info
 (
-    id      varchar(36) not null comment '유저 포인트정보 아이디'
+    id          varchar(36)                        not null comment '유저 포인트정보 아이디'
         primary key,
-    user_id varchar(36) not null comment '유저 아이디',
-    mileage int         not null comment '현재 보유 마일리지',
+    user_id     varchar(36)                        not null comment '유저 아이디',
+    mileage     int                                not null comment '현재 보유 마일리지',
+    create_time datetime default CURRENT_TIMESTAMP not null comment '생성일자',
     constraint travelers_mileage_info_user_id_un
         unique (user_id)
 );
