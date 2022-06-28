@@ -5,13 +5,13 @@ USE triple_db;
 
 create table travelers_review
 (
-    id             varchar(36)                            not null
+    id             varchar(36)                        not null
         primary key,
-    user_id        varchar(36)                            not null comment '작성자 아이디',
-    place_id       varchar(36)                            not null comment '리뷰 장소 아이디',
-    review_content varchar(255)                           not null comment '리뷰 텍스트 내용',
-    delete_yn      varchar(255) default 'N'               not null comment '삭제 여부',
-    create_time    datetime     default CURRENT_TIMESTAMP not null comment '생성 일시'
+    user_id        varchar(36)                        not null comment '작성자 아이디',
+    place_id       varchar(36)                        not null comment '리뷰 장소 아이디',
+    review_content varchar(255)                       not null comment '리뷰 텍스트 내용',
+    create_time    datetime default CURRENT_TIMESTAMP not null comment '생성 일시',
+    delete_time    datetime                           null comment '삭제일시'
 )
     comment '리뷰 관리 테이블';
 
@@ -46,6 +46,8 @@ create table review_images
     common_file_id      varchar(36)                        not null comment '파일 아이디',
     image_link          varchar(255)                       not null comment '이미지 링크 문자열',
     create_time         datetime default CURRENT_TIMESTAMP not null comment '생성 일시',
+    delete_time         datetime                           null comment '삭제 일시
+',
     constraint review_images_common_file_id_un
         unique (common_file_id)
 )
@@ -71,19 +73,34 @@ create index triple_place_info_place_name_index
 
 create table travelers_mileage_history
 (
-    id          varchar(36)                        not null comment '마일리지 이력 아이디'
+    id           varchar(36)                        not null comment '마일리지 이력 아이디'
         primary key,
-    user_id     varchar(36)                        not null comment '유저 아이디',
-    type        int(1)                             not null comment '마일리지 이력 타입. 1: 적립, 2: 소모',
-    mileage     int                                not null comment '적립 또는 소모 마일리지',
-    description varchar(200)                       not null comment '적립 또는 사용내용',
-    create_time datetime default CURRENT_TIMESTAMP not null comment '생성 일시'
+    user_id      varchar(36)                        not null comment '유저 아이디',
+    type         int(1)                             not null comment '마일리지 이력 타입. 1: 적립, 2: 소모',
+    mileage      int                                not null comment '적립 또는 소모 마일리지',
+    descriptions varchar(200)                       not null comment '적립 또는 사용내용',
+    create_time  datetime default CURRENT_TIMESTAMP not null comment '생성 일시',
+    delete_time  datetime                           null comment '삭제 일시'
 )
     comment '트리플 여행자 마일리지 관리 이력';
 
 create index travelers_mileage_history_user_for_search
     on travelers_mileage_history (user_id, type);
 
+
+create table review_reward_info
+(
+    id                 varchar(36) not null comment '리뷰 보상정보 아이디'
+        primary key,
+    review_id          varchar(36) not null comment '리뷰 아이디',
+    mileage_history_id varchar(36) not null comment '마일리지 이력 아이디',
+    result_type        varchar(50) not null comment '처리정보 타입',
+    create_time        datetime    not null comment '생서 일시'
+)
+    comment '리뷰 보상정보 관리 테이블';
+
+create index review_reward_info_for_search
+    on review_reward_info (review_id, mileage_history_id, result_type);
 
 
 create table travelers_mileage_info
@@ -96,6 +113,8 @@ create table travelers_mileage_info
     constraint travelers_mileage_info_user_id_un
         unique (user_id)
 );
+
+
 
 
 # 함수

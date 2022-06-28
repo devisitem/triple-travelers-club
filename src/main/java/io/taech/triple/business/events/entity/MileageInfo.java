@@ -1,5 +1,6 @@
 package io.taech.triple.business.events.entity;
 
+import io.taech.triple.common.util.Utils;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;
@@ -27,15 +28,22 @@ public class MileageInfo {
     private Integer mileage;
 
     private LocalDateTime createTime;
-    private Predicate<MileageHistory> settleable = (his) ->
-            (his.getUserId().equals(this.userId) && "N".equals(his.getDeleteYn()));
+
+    private Predicate<MileageHistory> settleable() {
+      return (his) ->
+              (his.getUserId().equals(this.userId) && Utils.isNull(his.getDeleteTime()));
+    }
 
 
     public void settledMileages(final List<MileageHistory> histories) {
-        final Integer settled = histories.stream().filter(settleable)
+        final Integer settled = histories.stream().filter(settleable())
                 .mapToInt(his -> his.getMileage())
                 .sum();
         setMileage(settled);
+    }
+
+    public Integer getMileages() {
+        return this.mileage;
     }
 
     private void setMileage(final Integer mileage) {

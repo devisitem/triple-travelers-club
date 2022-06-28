@@ -35,10 +35,9 @@ public class MileageHistory {
     @Column(nullable = false, length = 200)
     private String descriptions;
 
-    @Column(nullable = false, length = 1)
-    private String deleteYn;
-
     private LocalDateTime createTime;
+
+    private LocalDateTime deleteTime;
 
     public static MileageHistory create(final UUID userId, final MileageUsage usage) {
         final MileageHistory history = new MileageHistory();
@@ -48,7 +47,6 @@ public class MileageHistory {
         history.type = usage.type();
         history.mileage = usage.mileage();
         history.descriptions = usage.descriptions();
-        history.deleteYn = "N";
         history.createTime = LocalDateTime.now();
 
         return history;

@@ -11,19 +11,19 @@ import java.util.UUID;
 
 
 @Repository
-public class ReviewRepositorySupport extends QuerydslRepositorySupport {
+public class TripleReviewSupport extends QuerydslRepositorySupport {
 
     private final JPAQueryFactory query;
+    final QTravelersReview review = QTravelersReview.travelersReview;
 
 
-    public ReviewRepositorySupport(final JPAQueryFactory query) {
+    public TripleReviewSupport(final JPAQueryFactory query) {
         super(TravelersReview.class);
         this.query = query;
     }
 
 
     public TravelersReview findReview(final UUID reviewId, final UUID userId) {
-        final QTravelersReview review = QTravelersReview.travelersReview;
 
         return query.select(Projections.fields(TravelersReview.class,
                         review.id,
@@ -34,5 +34,21 @@ public class ReviewRepositorySupport extends QuerydslRepositorySupport {
                         .and(review.userId.eq(userId)))
                 .orderBy(review.createTime.desc())
                 .fetchOne();
+    }
+
+    public TravelersReview findFirstReview(final UUID placeId) {
+
+        return query
+                .select(Projections.fields(TravelersReview.class,
+                        review.placeId,
+                        review.id
+                ))
+                .from(review)
+                .where(review.placeId.eq(placeId)
+                        .and(review.deleteTime.isNotNull()))
+                .orderBy(review.createTime.asc())
+                .limit(1L)
+                .fetchOne();
+
     }
 }

@@ -2,7 +2,7 @@ package io.taech.triple.business.events.service;
 
 
 import io.taech.triple.business.events.dto.request.EventDto;
-import io.taech.triple.business.events.repository.support.ReviewRepositorySupport;
+import io.taech.triple.business.events.repository.support.TripleReviewSupport;
 import io.taech.triple.common.base.MockingTester;
 import io.taech.triple.common.excpeted.EventProcessingException;
 import io.taech.triple.common.excpeted.ResponseStatus;
@@ -21,7 +21,7 @@ class ReviewEventServiceTest extends MockingTester {
     private ReviewEventService service;
 
     @Mock
-    private ReviewRepositorySupport repository;
+    private TripleReviewSupport repository;
 
     @Test
     @DisplayName("[리뷰 작성 이벤트 처리] 존재하지 않는 리뷰")
@@ -40,6 +40,17 @@ class ReviewEventServiceTest extends MockingTester {
 
         /* Then */
         assertEquals(ResponseStatus.NOT_FOUND_REVIEW_DATA, actual.getResponseStatus());
+
+    }
+
+    @Test
+    @DisplayName("[리뷰 작성 이벤트 처리] ")
+    public void getReviewAboutEvent2() throws Throwable {
+        /* Given */
+
+        /* When */
+
+        /* Then */
 
     }
 }

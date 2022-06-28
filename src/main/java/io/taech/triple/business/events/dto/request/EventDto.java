@@ -22,7 +22,6 @@ public class EventDto extends AbstractStandardEventDto {
     @NotNull
     private UUID reviewId;
 
-    @NotBlank
     private String content;
 
     private List<String> attachedPhotoIds;

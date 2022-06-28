@@ -1,5 +1,6 @@
 package io.taech.triple.business.events.entity;
 
+import io.taech.triple.common.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -21,16 +25,39 @@ public class TravelersReview {
     @Column(nullable = false, length = 36)
     private UUID userId;
 
-    @Column(nullable = false, length = 36)
-    private UUID placeId;
+    @JoinColumn(name = "review",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private TriplePlaceInfo place;
 
     @Column(nullable = false)
     private String reviewContent;
 
-    @Column(nullable = false)
-    private String deleteYn;
-
     @Column(nullable = false, updatable = false)
     private LocalDateTime createTime;
 
+    private LocalDateTime deleteTime;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ReviewRewardInfo> rewardInfo = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ReviewImages> images = new ArrayList<>();
+
+    public void addRewardInfo(final ReviewRewardInfo rewardInfo) {
+        this.rewardInfo.add(rewardInfo);
+        rewardInfo.belongToReview(this);
+    }
+
+
+    public boolean hasDeletedImages() {
+        final Long count = this.images.stream().filter(img -> img.isDeleted()).count();
+
+        return (0 < count);
+    }
+
+    public Optional<ReviewRewardInfo> getEarlyBirdBonusHistory() {
+        return this.rewardInfo.stream()
+                .filter(info -> info.isEarlyBirdBonus() && info.isNotDeletedHistory())
+                .findFirst();
+    }
 }
