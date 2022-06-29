@@ -115,6 +115,14 @@ create table travelers_mileage_info
 );
 
 
+create table triple_user
+(
+    id          varchar(36)                        not null comment '유저정보 아이디'
+        primary key,
+    nickname    varchar(18)                        not null comment '유저 닉네임',
+    create_time datetime default CURRENT_TIMESTAMP not null comment '생성 일시'
+);
+
 
 
 # 함수

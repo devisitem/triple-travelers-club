@@ -1,7 +1,6 @@
 package io.taech.triple.business.events.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.taech.triple.common.dto.StandardResponse;
+import io.taech.triple.common.dto.response.StandardResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +25,9 @@ public class ReviewResponse implements StandardResponse {
 
     @NotNull
     private Integer totalMileages;
+
+    @Override
+    public ResultInfo result() {
+        return this.result;
+    }
 }

@@ -3,10 +3,9 @@ package io.taech.triple.business.events.controller;
 import io.taech.triple.business.events.constant.ActionType;
 import io.taech.triple.business.events.dto.request.EventDto;
 import io.taech.triple.business.events.service.EventService;
-import io.taech.triple.common.dto.StandardEventDto;
-import io.taech.triple.common.dto.StandardResponse;
+import io.taech.triple.common.dto.response.StandardResponse;
 import io.taech.triple.common.excpeted.EventProcessingException;
-import io.taech.triple.common.excpeted.ResponseStatus;
+import io.taech.triple.common.excpeted.ServiceStatus;
 import io.taech.triple.common.excpeted.ValidateException;
 import io.taech.triple.common.util.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,7 @@ public class EventController {
         if(Utils.isNull(actionType)) {
 
             log.info("There is no action for \"{}\"", action);
-            throw new EventProcessingException(ResponseStatus.INVALID_EVENT);
+            throw new EventProcessingException(ServiceStatus.INVALID_EVENT);
         }
 
         log.info("Proceed event service for \"{}\" review.", action);
@@ -56,7 +55,7 @@ public class EventController {
                 response = service.proceedDeleteEvent(eventDto);
                 break;
             default:
-                throw new ValidateException("Not supported action.");
+                throw new ValidateException(ServiceStatus.NOT_SUPPORTED_ACTION);
 
         }
 

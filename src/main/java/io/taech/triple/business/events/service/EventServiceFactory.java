@@ -1,6 +1,7 @@
 package io.taech.triple.business.events.service;
 
 import io.taech.triple.business.events.constant.EventStrategy;
+import io.taech.triple.common.excpeted.ServiceStatus;
 import io.taech.triple.common.excpeted.ValidateException;
 import io.taech.triple.common.util.Utils;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class EventServiceFactory {
         final EventStrategy eventStrategy = EventStrategy.find(type);
 
         if(Utils.isNull(eventStrategy))
-            throw new ValidateException(String.format("\"%s\" is not declared.", type));
+            throw new ValidateException(ServiceStatus.NOT_FOUND_EVENT_TYPE);
 
         final EventService toBeInjected = (EventService) context.getBean(eventStrategy.getBeanName());
 

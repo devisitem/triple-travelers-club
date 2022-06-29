@@ -1,5 +1,6 @@
 package io.taech.triple.common.util;
 
+import io.taech.triple.common.excpeted.ServiceStatus;
 import io.taech.triple.common.excpeted.ValidateException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class ValidUtils {
 
     public static UUID getWithInspect(final String uuid) {
         if( ! forUUID(uuid))
-            throw new ValidateException(String.format("Invalid UUID format. \"%s\"", uuid));
+            throw new ValidateException(ServiceStatus.INVALID_UUID_FORMAT);
 
         return UUID.fromString(uuid);
     }

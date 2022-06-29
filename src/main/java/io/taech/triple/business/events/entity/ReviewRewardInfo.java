@@ -5,6 +5,7 @@ import io.taech.triple.common.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,18 +13,18 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewRewardInfo {
 
     @Id
-    @Column(nullable = false, length = 36)
+    @Column(nullable = false, updatable = false, columnDefinition = "VARCHAR(36)")
+    @Type(type = "uuid-char")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", nullable = false)
     private TravelersReview review;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "mileage_history_id", nullable = false)
     private MileageHistory history;
 
@@ -36,12 +37,14 @@ public class ReviewRewardInfo {
         this.review = review;
     }
 
-    public static ReviewRewardInfo create( final MileageHistory history, final MileageUsage usage) {
+    public static ReviewRewardInfo create(final MileageUsage usage, final TravelersReview review, final MileageHistory history) {
         final ReviewRewardInfo rewardInfo = new ReviewRewardInfo();
 
-        rewardInfo.history = history;
+        rewardInfo.id = UUID.randomUUID();
         rewardInfo.resultType = usage;
         rewardInfo.createTime = LocalDateTime.now();
+        rewardInfo.review = review;
+        rewardInfo.history = history;
 
         return rewardInfo;
     }
@@ -52,5 +55,9 @@ public class ReviewRewardInfo {
 
     public boolean isNotDeletedHistory() {
         return Utils.isNull(this.history.getDeleteTime());
+    }
+
+    public void connectHistory(MileageHistory history) {
+        this.history = history;
     }
 }

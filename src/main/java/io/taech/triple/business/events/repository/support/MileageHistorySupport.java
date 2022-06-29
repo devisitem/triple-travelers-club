@@ -25,10 +25,12 @@ public class MileageHistorySupport extends QuerydslRepositorySupport {
         final QMileageHistory history = QMileageHistory.mileageHistory;
 
         return query.select(Projections.fields(MileageHistory.class,
-                history.userId,
-                history.mileage
+                history.id,
+                history.user,
+                history.mileage,
+                history.deleteTime
         )).from(history)
-                .where(history.userId.eq(userId))
+                .where(history.user.id.eq(userId))
                 .fetch();
     }
 

@@ -5,14 +5,14 @@ import lombok.Getter;
 @Getter
 public class EventProcessingException extends RuntimeException {
 
-    private ResponseStatus responseStatus;
+    private ServiceStatus serviceStatus;
 
-    public EventProcessingException(final ResponseStatus responseStatus) {
-        this.responseStatus = responseStatus;
+    public EventProcessingException(final ServiceStatus serviceStatus) {
+        this.serviceStatus = serviceStatus;
     }
 
     @Override
     public String getMessage() {
-        return this.responseStatus.getMessage();
+        return this.serviceStatus.getMessage();
     }
 }

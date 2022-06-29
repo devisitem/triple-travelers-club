@@ -4,27 +4,28 @@ import io.taech.triple.business.events.constant.MileageUsage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(schema = "travelers_mileage_history")
+@DynamicUpdate
+@Table(name = "travelers_mileage_history")
 public class MileageHistory {
 
     @Id
-    @Column(nullable = false, length = 36)
+    @Column(nullable = false, updatable = false, columnDefinition = "VARCHAR(36)")
+    @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(nullable = false, length = 36)
-    private UUID userId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable =false, updatable =false, columnDefinition = "VARCHAR(36)")
+    private TripleUser user;
 
     @Column(nullable = false, length = 1)
     private Integer type;
@@ -39,15 +40,18 @@ public class MileageHistory {
 
     private LocalDateTime deleteTime;
 
-    public static MileageHistory create(final UUID userId, final MileageUsage usage) {
+    @OneToOne(mappedBy = "history", fetch = FetchType.LAZY)
+    private ReviewRewardInfo rewardInfo;
+
+    public static MileageHistory create(final MileageUsage usage, final TripleUser user) {
         final MileageHistory history = new MileageHistory();
 
         history.id = UUID.randomUUID();
-        history.userId = userId;
         history.type = usage.type();
         history.mileage = usage.mileage();
         history.descriptions = usage.descriptions();
         history.createTime = LocalDateTime.now();
+        history.user = user;
 
         return history;
     }
@@ -57,4 +61,13 @@ public class MileageHistory {
                 his.mileage).sum();
     }
 
+    public void connectRewardInfo(final ReviewRewardInfo rewardInfo) {
+        this.rewardInfo = rewardInfo;
+        rewardInfo.connectHistory(this);
+    }
+
+    public void connectUser(final TripleUser tripleUser) {
+        this.user = tripleUser;
+        tripleUser.addHistory(this);
+    }
 }

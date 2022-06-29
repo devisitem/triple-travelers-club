@@ -2,8 +2,8 @@ package io.taech.triple.business.events.repository.support;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.taech.triple.business.events.entity.MileageInfo;
 import io.taech.triple.business.events.entity.QMileageInfo;
+import io.taech.triple.business.events.entity.MileageInfo;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
@@ -21,13 +21,13 @@ public class MileageInfoSupport extends QuerydslRepositorySupport {
     }
 
     public MileageInfo findByUserId(final UUID userId) {
-        query.select(Projections.fields(MileageInfo.class,
+
+        return query.select(Projections.fields(MileageInfo.class,
                 info.id,
                 info.mileage
                 ))
                 .from(info)
-                .where(info.userId.eq(userId))
+                .where(info.user.id.eq(userId))
                 .fetchOne();
-        return null;
     }
 }

@@ -1,10 +1,12 @@
 package io.taech.triple.business.events.entity;
 
+import io.taech.triple.common.excpeted.EventProcessingException;
 import io.taech.triple.common.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,20 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TravelersReview {
 
     @Id
-    @Column(nullable = false, length = 36)
+    @Column(nullable = false, updatable = false, columnDefinition = "VARCHAR(36)")
+    @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(nullable = false, length = 36)
-    private UUID userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false, columnDefinition = "VARCHAR(36)")
+    private TripleUser user;
 
-    @JoinColumn(name = "review",nullable = false)
+    @JoinColumn(name = "place_id",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private TriplePlaceInfo place;
 
@@ -43,6 +47,8 @@ public class TravelersReview {
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ReviewImages> images = new ArrayList<>();
 
+
+
     public void addRewardInfo(final ReviewRewardInfo rewardInfo) {
         this.rewardInfo.add(rewardInfo);
         rewardInfo.belongToReview(this);
@@ -59,5 +65,14 @@ public class TravelersReview {
         return this.rewardInfo.stream()
                 .filter(info -> info.isEarlyBirdBonus() && info.isNotDeletedHistory())
                 .findFirst();
+    }
+
+    public boolean isEqualsId(final UUID other) {
+        return this.id.equals(other);
+    }
+
+    public void ifDeleted(Supplier<? extends EventProcessingException> ifDeletedReview) {
+        if(Utils.isNotNull(this.getDeleteTime()))
+            throw ifDeletedReview.get();
     }
 }

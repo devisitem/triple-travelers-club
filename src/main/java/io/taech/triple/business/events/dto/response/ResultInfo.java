@@ -2,7 +2,7 @@ package io.taech.triple.business.events.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import io.taech.triple.common.excpeted.ResponseStatus;
+import io.taech.triple.common.excpeted.ServiceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class ResultInfo {
 
     public static ResultInfo success() {
         final ResultInfo result = new ResultInfo();
-        result.code = ResponseStatus.SUCCESS.getCode();
+        result.code = ServiceStatus.SUCCESS.getCode();
 
         return result;
     }
