@@ -14,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     userName: root
     password: 1111
-    url: jdbc:mysql://localhost:3302/triple_db
+    url: jdbc:mysql://localhost:3939/triple_db
 
 
 logging:
