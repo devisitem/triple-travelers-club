@@ -9,13 +9,13 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    userName: root
-    password: 1111
-    url: jdbc:mysql://localhost:3939/triple_db
-
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    userName: root
+#    password: 1111
+#    url: jdbc:mysql://triple_travelers_db:3939/triple_db
 
 logging:
   level:
