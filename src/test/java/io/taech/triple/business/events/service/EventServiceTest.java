@@ -12,19 +12,4 @@ class EventServiceTest extends MockingTester {
     @InjectMocks
     private EventService service;
 
-    @Test
-    @DisplayName("[이벤트 처리] 존재하지 않는 타입")
-    public void consumeEvent1() throws Throwable {
-        /* Given */
-        final String eventType = "PROMOTION";
-        final EventDto input = new EventDto();
-        input.setType(eventType);
-
-        /* When */
-//        final EventProcessingException actual = assertThrows(EventProcessingException.class, () -> service.consumeEvent(input));
-
-        /* Then */
-//        assertEquals(ResponseStatus.INVALID_EVENT, actual.getResponseStatus());
-
-    }
 }

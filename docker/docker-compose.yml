@@ -1,0 +1,41 @@
+version: '3'
+services:
+  mysql:
+    restart: always
+    image: mysql:5.7
+    container_name: triple_travelers_db
+    environment:
+      - MYSQL_DATABASE=triple_db
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=1111
+    ports:
+      - '3302:3306'
+    command:
+      - --character-set-server=utf8mb3
+      - --collation-server=utf8_general_ci
+      - --init-file /data/application/prepared.sql
+    volumes:
+      - ../docker:/var/lib/mysql
+      - ./prepared.sql:/data/application/prepared.sql
+    networks:
+      - triple_travelers_club
+
+  travelers_club_application:
+    build: .
+    restart: always
+    ports:
+      - '8270:8270'
+    depends_on:
+      - mysql
+    container_name: triple_travelers_club
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3302/triple_db?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1111
+    networks:
+      - triple_travelers_club
+
+networks:
+  triple_travelers_club:
+
+# docker run -it -d -p 3302:3306 --name triple-travelers-club -e MYSQL_ROOT_PASSWORD=1111 --restart=always --platform=linux/amd64 mysql:5.7
