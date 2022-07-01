@@ -4,6 +4,7 @@ import io.taech.triple.business.events.constant.MileageUsage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @DynamicUpdate
+@DynamicInsert
 @Table(name = "travelers_mileage_history")
 public class MileageHistory {
 
@@ -50,7 +52,6 @@ public class MileageHistory {
         history.type = usage.type();
         history.mileage = usage.mileage();
         history.descriptions = usage.descriptions();
-        history.createTime = LocalDateTime.now();
         history.user = user;
 
         return history;

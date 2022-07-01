@@ -5,6 +5,7 @@ import io.taech.triple.common.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@DynamicInsert
 public class ReviewRewardInfo {
 
     @Id
@@ -42,7 +44,6 @@ public class ReviewRewardInfo {
 
         rewardInfo.id = UUID.randomUUID();
         rewardInfo.resultType = usage;
-        rewardInfo.createTime = LocalDateTime.now();
         rewardInfo.review = review;
         rewardInfo.history = history;
 

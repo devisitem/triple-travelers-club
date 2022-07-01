@@ -12,6 +12,7 @@ services:
       - '3939:3306'
     volumes:
       - ./docker/prepared.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./docker/mysql/my_triple.cnf:/etc/mysql/conf.d/mysql.cnf
     networks:
       - triple_travelers_club
 

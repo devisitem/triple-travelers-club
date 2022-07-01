@@ -3,6 +3,7 @@ package io.taech.triple.business.events.entity;
 import io.taech.triple.business.events.constant.MileageUsage;
 import io.taech.triple.common.excpeted.ValidateException;
 import lombok.Getter;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -33,6 +34,21 @@ public class TripleUser {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MileageHistory> histories = new ArrayList<>();
 
+
+    public static TripleUser create(final String nickname) {
+        final TripleUser user = new TripleUser();
+        user.id = UUID.randomUUID();
+        user.nickname = nickname;
+
+        return user;
+    }
+
+    public void addReview(final TravelersReview review) {
+        this.reviews.add(review);
+        review.connectUser(this);
+    }
+
+
     public String getId() {
         return this.id.toString();
     }
@@ -49,7 +65,6 @@ public class TripleUser {
     public Optional<TravelersReview> getReview(final UUID reviewId) {
         final Optional<TravelersReview> first = this.getReviews().stream().filter(review -> review.getId().equals(reviewId))
                 .findFirst();
-
 
         return first;
     }

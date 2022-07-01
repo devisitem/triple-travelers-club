@@ -34,11 +34,11 @@ public class ReviewEventService implements EventService {
 
     public static final String BEAN_NAME = "reviewEventService";
 
-    private final TripleReviewSupport reviewRepository;
+    private final ReviewRewardInfoSupport rewardInfoSupport;
+    private final TripleReviewSupport reviewSupport;
     private final UserRepository userRepository;
 
     private final MileageService mileageService;
-    private final ReviewRewardInfoSupport rewardInfoSupport;
 
     @Override
     @Transactional
@@ -50,9 +50,7 @@ public class ReviewEventService implements EventService {
         final TravelersReview review = user.getReview(event.getReviewId()).orElseThrow(() -> {
             log.error("Not found review with id: \"{}\"", event.getReviewId());
             return new ValidateException(ServiceStatus.NOT_FOUND_REVIEW_DATA);
-        });
-
-        review.ifDeleted(() -> {
+        }).ifDeleted(() -> {
             log.error("Already deleted review. Can't proceed event.");
             return new EventProcessingException(ServiceStatus.ALREADY_DELETED_REVIEW);
         });
@@ -63,7 +61,7 @@ public class ReviewEventService implements EventService {
             throw new EventProcessingException(ServiceStatus.ONLY_ONE_REWARD_AT_PLACE);
         }
 
-        final TravelersReview firstReview = reviewRepository.findFirstReview(placeId);
+        final TravelersReview firstReview = reviewSupport.findFirstReview(placeId);
         if(Utils.isNull(firstReview)) {
             log.error("first review cannot be null due published event.");
             throw new EventProcessingException(ServiceStatus.NOT_FOUND_REVIEW_DATA);
@@ -76,7 +74,7 @@ public class ReviewEventService implements EventService {
         }
 
         //== 사진첨부 ==//
-        if( ! event.getAttachedPhotoIds().isEmpty()) {
+        if(review.hasImages() && (! event.getAttachedPhotoIds().isEmpty())) {
             log.info("review has photos at least one so that added correspond mileages for attach photos.");
             mileageService.manageMileagesWithReview(review, user, MileageUsage.ADD_PHOTOS_REVIEW);
         }
@@ -105,11 +103,14 @@ public class ReviewEventService implements EventService {
         final TravelersReview review = user.getReview(event.getReviewId()).orElseThrow(() -> {
             log.error("Not found review with id: \"{}\"", event.getReviewId());
             return new ValidateException(ServiceStatus.NOT_FOUND_REVIEW_DATA);
-        });
-
-        review.ifDeleted(() -> {
+        }).ifDeleted(() -> {
             log.error("Already deleted review. Can't proceed event.");
             return new EventProcessingException(ServiceStatus.ALREADY_DELETED_REVIEW);
+        });
+
+        review.ifHasNotDefaultRewardedHistory().orElseThrow(() -> {
+           log.error("There is no history that rewarded for default, so that can't change status of review.");
+           throw new EventProcessingException(ServiceStatus.NEED_DEFAULT_REWARDED_HISTORY);
         });
 
         //== 기존 삭제된 이미지가 존재하고 수정이벤트의 이미지가 없는경우 (이미지 삭제) ==//
@@ -146,6 +147,11 @@ public class ReviewEventService implements EventService {
         final TravelersReview review = user.getReview(event.getReviewId()).orElseThrow(() -> {
             log.error("Not found review with id: \"{}\"", event.getReviewId());
             return new ValidateException(ServiceStatus.NOT_FOUND_REVIEW_DATA);
+        });
+
+        review.ifHasNotDefaultRewardedHistory().orElseThrow(() -> {
+            log.error("There is no history that rewarded for default, so that can't change status of review.");
+            throw new EventProcessingException(ServiceStatus.NEED_DEFAULT_REWARDED_HISTORY);
         });
 
         //== 현재리뷰로 획득한 마일리지중에 얼리버드 보너스가 존재 ==//

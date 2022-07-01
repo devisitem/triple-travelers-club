@@ -19,7 +19,8 @@ public enum ServiceStatus {
     SYSTEM_ISSUE(500, 9, "요청처리중 에러가 발생하였습니다."),
     INVALID_UUID_FORMAT(400, 10, "유효하지않은 UUID 형식입니다."),
     NOT_SUPPORTED_ACTION(400, 11, "지원되지않는 액션 타입입니다."),
-    NOT_FOUND_EVENT_TYPE(400, 12, "존재하지않는 이벤트 타입입니다.");
+    NOT_FOUND_EVENT_TYPE(400, 12, "존재하지않는 이벤트 타입입니다."),
+    NEED_DEFAULT_REWARDED_HISTORY(400, 13, "기본 작성이력 보상이 존재하지않습니다. 먼저 작성해야, 수정하거나 삭제할 수 있습니다.");
     ;
 
     private int status;

@@ -9,7 +9,7 @@ create table travelers_review
     user_id        varchar(36)                        not null comment '작성자 아이디',
     place_id       varchar(36)                        not null comment '리뷰 장소 아이디',
     review_content varchar(255)                       not null comment '리뷰 텍스트 내용',
-    create_time    datetime default CURRENT_TIMESTAMP not null comment '생성 일시',
+    create_time    datetime(6) default NOW(6)         not null comment '생성 일시',
     delete_time    datetime                           null comment '삭제일시'
 )
     comment '리뷰 관리 테이블';
@@ -31,7 +31,7 @@ create table common_file
     stored_file_name varchar(50)                        null comment '저장된 파일명',
     real_file_name   varchar(50)                        not null comment '실제 파일명',
     file_extension   varchar(5)                         not null comment '파일 확장자',
-    create_time      datetime default CURRENT_TIMESTAMP not null comment '생성 일시'
+    create_time      datetime(6) default NOW(6)         not null comment '생성 일시'
 )
     comment '공통 파일 관리 테이블';
 
@@ -44,7 +44,7 @@ create table review_images
     travelers_review_id varchar(36)                        not null comment '소속된 리뷰 아이디',
     common_file_id      varchar(36)                        not null comment '파일 아이디',
     image_link          varchar(255)                       not null comment '이미지 링크 문자열',
-    create_time         datetime default CURRENT_TIMESTAMP not null comment '생성 일시',
+    create_time         datetime(6) default NOW(6)         not null comment '생성 일시',
     delete_time         datetime                           null comment '삭제 일시
 ',
     constraint review_images_common_file_id_un
@@ -62,7 +62,7 @@ create table triple_place_info
     id          varchar(36)                        not null comment '여행 장소 아이디'
         primary key,
     place_name  varchar(200)                       not null comment '트리플 여행지 장소명',
-    create_time datetime default CURRENT_TIMESTAMP not null comment '생성 일시'
+    create_time datetime(6) default NOW(6)         not null comment '생성 일시'
 );
 
 create index triple_place_info_place_name_index
@@ -78,7 +78,7 @@ create table travelers_mileage_history
     type         int(1)                             not null comment '마일리지 이력 타입. 1: 적립, 2: 소모',
     mileage      int                                not null comment '적립 또는 소모 마일리지',
     descriptions varchar(200)                       not null comment '적립 또는 사용내용',
-    create_time  datetime default CURRENT_TIMESTAMP not null comment '생성 일시',
+    create_time  datetime(6) default NOW(6)         not null comment '생성 일시',
     delete_time  datetime                           null comment '삭제 일시'
 )
     comment '트리플 여행자 마일리지 관리 이력';
@@ -89,12 +89,12 @@ create index travelers_mileage_history_user_for_search
 
 create table review_reward_info
 (
-    id                 varchar(36) not null comment '리뷰 보상정보 아이디'
+    id                 varchar(36)                    not null comment '리뷰 보상정보 아이디'
         primary key,
-    review_id          varchar(36) not null comment '리뷰 아이디',
-    mileage_history_id varchar(36) not null comment '마일리지 이력 아이디',
-    result_type        varchar(50) not null comment '처리정보 타입',
-    create_time        datetime    not null comment '생서 일시'
+    review_id          varchar(36)                    not null comment '리뷰 아이디',
+    mileage_history_id varchar(36)                    not null comment '마일리지 이력 아이디',
+    result_type        varchar(50)                    not null comment '처리정보 타입',
+    create_time        datetime(6) default   NOW(6)   not null comment '생성 일시'
 )
     comment '리뷰 보상정보 관리 테이블';
 
@@ -108,7 +108,7 @@ create table travelers_mileage_info
         primary key,
     user_id     varchar(36)                        not null comment '유저 아이디',
     mileage     int                                not null comment '현재 보유 마일리지',
-    create_time datetime default CURRENT_TIMESTAMP not null comment '생성일자',
+    create_time datetime(6) default    NOW(6)      not null comment '생성일시',
     constraint travelers_mileage_info_user_id_un
         unique (user_id)
 );
@@ -119,7 +119,7 @@ create table triple_user
     id          varchar(36)                        not null comment '유저정보 아이디'
         primary key,
     nickname    varchar(18)                        not null comment '유저 닉네임',
-    create_time datetime default CURRENT_TIMESTAMP not null comment '생성 일시'
+    create_time datetime(6) default    NOW(6)      not null comment '생성 일시'
 );
 
 
@@ -190,20 +190,19 @@ values ('99a12bf6-0eeb-4e46-b9a2-c6b4b4c633c3', '트리플49');
 
 
 -- 유저 마일리정보
-INSERT INTO triple_db.travelers_mileage_info (id, user_id, mileage, create_time)
-VALUES ('24cd946a-77ae-4fb0-955d-992896bf2644', '8d218e30-1f92-4242-a3f6-f34761b20ea5', 0, NOW());
-INSERT INTO triple_db.travelers_mileage_info (id, user_id, mileage, create_time)
-VALUES ('4f558b2a-c9d5-4876-a55d-4faa30d60531', '99a12bf6-0eeb-4e46-b9a2-c6b4b4c633c3', 0, NOW());
+INSERT INTO triple_db.travelers_mileage_info (id, user_id, mileage)
+VALUES ('24cd946a-77ae-4fb0-955d-992896bf2644', '8d218e30-1f92-4242-a3f6-f34761b20ea5', 0);
+INSERT INTO triple_db.travelers_mileage_info (id, user_id, mileage)
+VALUES ('4f558b2a-c9d5-4876-a55d-4faa30d60531', '99a12bf6-0eeb-4e46-b9a2-c6b4b4c633c3', 0);
 
 
 -- 리뷰 이미지
 
 insert into review_images
-    (id, travelers_review_id, common_file_id, image_link, create_time)
+    (id, travelers_review_id, common_file_id, image_link)
 values ('e4d1a64e-a531-46de-88d0-ff0ed70c0bb8',
         '944dba74-e760-4152-8f15-5584f572cab4',
         'e4d1a64e-46de-a531-88d0-ff0ed70c0bb8',
-        'https://s3.ap-northeast-2.amazonaws.com/review_images/MDS4M18SM5K1',
-        NOW());
+        'https://s3.ap-northeast-2.amazonaws.com/review_images/MDS4M18SM5K1');
 
 

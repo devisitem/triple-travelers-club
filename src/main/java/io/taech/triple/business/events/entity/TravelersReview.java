@@ -1,10 +1,13 @@
 package io.taech.triple.business.events.entity;
 
+import io.taech.triple.business.events.constant.ActionType;
+import io.taech.triple.business.events.constant.MileageUsage;
 import io.taech.triple.common.excpeted.EventProcessingException;
 import io.taech.triple.common.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -47,6 +50,18 @@ public class TravelersReview {
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ReviewImages> images = new ArrayList<>();
 
+    public static TravelersReview create(final String content) {
+        final TravelersReview review = new TravelersReview();
+
+        review.id = UUID.randomUUID();
+        review.reviewContent = content;
+
+        return review;
+    }
+
+    public void connectPlace(final TriplePlaceInfo place) {
+        this.place = place;
+    }
 
 
     public void addRewardInfo(final ReviewRewardInfo rewardInfo) {
@@ -54,6 +69,9 @@ public class TravelersReview {
         rewardInfo.belongToReview(this);
     }
 
+    public void connectUser(final TripleUser tripleUser) {
+        this.user = tripleUser;
+    }
 
     public boolean hasDeletedImages() {
         final Long count = this.images.stream().filter(img -> img.isDeleted()).count();
@@ -71,8 +89,20 @@ public class TravelersReview {
         return this.id.equals(other);
     }
 
-    public void ifDeleted(Supplier<? extends EventProcessingException> ifDeletedReview) {
+    public TravelersReview ifDeleted(Supplier<? extends EventProcessingException> ifDeletedReview) {
         if(Utils.isNotNull(this.getDeleteTime()))
             throw ifDeletedReview.get();
+
+        return this;
     }
+
+    public Optional<ReviewRewardInfo> ifHasNotDefaultRewardedHistory() {
+        return this.getRewardInfo().stream().filter(info -> info.getResultType().equals(MileageUsage.ADD_WRITE_REVIEW))
+                .findFirst();
+    }
+
+    public boolean hasImages() {
+        return ( ! this.images.isEmpty());
+    }
+
 }

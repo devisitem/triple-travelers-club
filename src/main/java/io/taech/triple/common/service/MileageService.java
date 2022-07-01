@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MileageService {
 
-    private final MileageHistoryRepository historyRepository;
     private final RewardInfoRepository rewardInfoRepository;
 
     @Transactional(propagation = Propagation.MANDATORY)
@@ -39,9 +38,6 @@ public class MileageService {
         } catch (Throwable t) {
             log.error("Error occurred at some problems with: ", t);
             log.info("Failed to manage for mileage but, propagate this exception as EventProcessingException for transactions.");
-
-            if(t instanceof EventProcessingException)
-                throw t;
 
             throw new EventProcessingException(ServiceStatus.FAILED_TO_MANAGE_MILEAGES);
         }

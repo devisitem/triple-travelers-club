@@ -29,4 +29,17 @@ public class TriplePlaceInfo {
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TravelersReview> reviews = new ArrayList<>();
 
+    public static TriplePlaceInfo create(final String placeName) {
+        final TriplePlaceInfo place = new TriplePlaceInfo();
+        place.id = UUID.randomUUID();
+        place.placeName = placeName;
+
+        return place;
+    }
+
+    public void addReview(final TravelersReview review) {
+        this.reviews.add(review);
+        review.connectPlace(this);
+    }
+
 }
