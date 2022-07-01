@@ -15,7 +15,7 @@ public enum ServiceStatus {
     NOT_FOUND_USER_DATA(400, 5, "존재하지 않는 유저입니다."),
     ONLY_ONE_REWARD_AT_PLACE(500, 6, "리뷰는 장소당 한개만 작성할 수 있으며, 보상도 동일합니다."),
     ALREADY_DELETED_REVIEW(500, 7, "이미 삭제된 리뷰는 등록 또는 수정이 불가능합니다."),
-    INVALID_REQUEST(400, 8, "잘못된 요청 정입니다."),
+    INVALID_REQUEST(400, 8, "잘못된 요청 정보입니다."),
     SYSTEM_ISSUE(500, 9, "요청처리중 에러가 발생하였습니다."),
     INVALID_UUID_FORMAT(400, 10, "유효하지않은 UUID 형식입니다."),
     NOT_SUPPORTED_ACTION(400, 11, "지원되지않는 액션 타입입니다."),
