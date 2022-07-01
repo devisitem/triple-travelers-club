@@ -1,7 +1,6 @@
-CREATE DATABASE IF NOT EXISTS triple_db CHARACTER SET utf8mb3 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS triple_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE triple_db;
-
-# 테이블 정의
+-- 테이블 정의
 
 create table travelers_review
 (
@@ -125,9 +124,9 @@ create table triple_user
 
 
 
-# 함수
+-- 함수
 
-## 버전 4 UUID 생성
+-- 버전 4 UUID 생성
 DELIMITER //
 
 CREATE FUNCTION uuid_v4()
@@ -153,28 +152,58 @@ END
 DELIMITER ;
 
 
-# data setting
+-- data setting
 
-## 장소
+-- 장소
 insert into triple_place_info (id, place_name)
-values (uuid_v4(), '랜딩관 제주신화월드 호텔앤리조트');
+values ('4706addc-903e-4e58-9286-c7a33576b462', '랜딩관 제주신화월드 호텔앤리조트');
 insert into triple_place_info (id, place_name)
-values (uuid_v4(), '메리어트관 제주신화월드 호텔앤리조트');
+values ('8fba508e-e395-4ed1-a0e5-8045d699b030', '메리어트관 제주신화월드 호텔앤리조트');
 insert into triple_place_info (id, place_name)
-values (uuid_v4(), '제주 에코그린리조트');
+values ('ae4eee3c-9c46-4726-a424-42a87877925e', '제주 에코그린리조트');
 insert into triple_place_info (id, place_name)
-values (uuid_v4(), '호텔 리젠트 마린');
+values ('bc2ce5ed-4922-4ddf-b2a0-bbe1d002dc67', '호텔 리젠트 마린');
 
-## 리뷰
+
+-- 리뷰
 insert into travelers_review
     (id, user_id, place_id, review_content)
-values (uuid_v4(),
-        uuid_v4(),
+values ('944dba74-e760-4152-8f15-5584f572cab4',
+        '99a12bf6-0eeb-4e46-b9a2-c6b4b4c633c3',
         '0afbe506-5835-4f3a-aa42-09f32922afd1',
         '첫번째로 너무 깨끗하고, 보다 일찍 입실하게 해주셨어요!\n조식 뷔페가 진짜 짱이에요! 돈이 하나도 안아까웠습니다.\n하우스키핑에서 청결관리를 너무 잘해줘요.');
 insert into travelers_review
     (id, user_id, place_id, review_content)
-values (uuid_v4(),
-        uuid_v4(),
+values ('71906941-b998-456c-9667-6436c844bcb7',
+        '8d218e30-1f92-4242-a3f6-f34761b20ea5',
         '0afbe506-5835-4f3a-aa42-09f32922afd1',
         '1빠!');
+
+-- 유저
+insert into triple_user
+    (id, nickname)
+values ('8d218e30-1f92-4242-a3f6-f34761b20ea5', '트리플과함께');
+
+insert into triple_user
+    (id, nickname)
+values ('99a12bf6-0eeb-4e46-b9a2-c6b4b4c633c3', '트리플49');
+
+
+-- 유저 마일리정보
+INSERT INTO triple_db.travelers_mileage_info (id, user_id, mileage, create_time)
+VALUES ('24cd946a-77ae-4fb0-955d-992896bf2644', '8d218e30-1f92-4242-a3f6-f34761b20ea5', 0, NOW());
+INSERT INTO triple_db.travelers_mileage_info (id, user_id, mileage, create_time)
+VALUES ('4f558b2a-c9d5-4876-a55d-4faa30d60531', '99a12bf6-0eeb-4e46-b9a2-c6b4b4c633c3', 0, NOW());
+
+
+-- 리뷰 이미지
+
+insert into review_images
+    (id, travelers_review_id, common_file_id, image_link, create_time)
+values ('e4d1a64e-a531-46de-88d0-ff0ed70c0bb8',
+        '944dba74-e760-4152-8f15-5584f572cab4',
+        'e4d1a64e-46de-a531-88d0-ff0ed70c0bb8',
+        'https://s3.ap-northeast-2.amazonaws.com/review_images/MDS4M18SM5K1',
+        NOW());
+
+

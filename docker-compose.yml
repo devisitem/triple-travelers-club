@@ -3,14 +3,15 @@ services:
   triple_mysql:
     restart: always
     image: mysql:5.7
+    platform: linux/x86_64
     container_name: triple_travelers_db
     environment:
       MYSQL_ROOT_PASSWORD: 1111
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     ports:
       - '3939:3306'
     volumes:
-      - ./docker/mysql:/var/lib/mysql
-      - ./docker/prepared.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./docker/prepared.sql:/docker-entrypoint-initdb.d/schema.sql
     networks:
       - triple_travelers_club
 
@@ -27,7 +28,7 @@ services:
       dockerfile: Dockerfile
     container_name: triple_travelers_club
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://triple_mysql:3939/triple_db?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://triple_mysql:3306/triple_db?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1111
     networks:

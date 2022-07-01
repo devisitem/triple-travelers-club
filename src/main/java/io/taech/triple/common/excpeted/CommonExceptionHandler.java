@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CommonExceptionHandler {
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ValidateException.class})
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(final MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(final Exception e) {
 
         final ServiceStatus serviceStatus = ServiceStatus.INVALID_REQUEST;
         log.info("[{}]Exception Handler detected this: ", e.getClass().getSimpleName(), e);
